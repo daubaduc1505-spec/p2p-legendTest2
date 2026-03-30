@@ -8,45 +8,69 @@
         :root { --green: #39FF14; --bg: #050505; --panel: rgba(0, 25, 0, 0.85); }
         body, html { margin: 0; padding: 0; background: var(--bg); color: var(--green); font-family: 'Courier New', monospace; overflow-x: hidden; }
         canvas { position: fixed; top: 0; left: 0; z-index: -1; }
-        .main-grid { display: grid; grid-template-columns: 1fr 380px; gap: 20px; padding: 20px; max-width: 1400px; margin: auto; padding-bottom: 100px; }
+        
+        /* Hiệu ứng Mưa Bitcoin (Airdrop) */
+        .btc-drop { position: fixed; top: -50px; color: #ff9900; font-size: 24px; animation: fall linear infinite; z-index: -1; opacity: 0.7; }
+        @keyframes fall { to { transform: translateY(100vh); } }
+
+        .main-grid { display: grid; grid-template-columns: 1fr 380px; gap: 20px; padding: 20px; max-width: 1400px; margin: auto; padding-bottom: 100px; z-index: 10; position: relative; }
         .panel { background: var(--panel); border: 2px solid var(--green); padding: 15px; box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); margin-bottom: 20px; }
         .social-links { display: flex; gap: 15px; margin-bottom: 20px; justify-content: center; }
         .social-btn { text-decoration: none; color: #000; background: var(--green); padding: 8px 20px; font-weight: 900; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); transition: 0.3s; }
         .big-countdown { text-align: center; border: 3px solid var(--green); }
         .timer-val { font-size: clamp(1.5rem, 4vw, 3.5rem); font-weight: 900; text-shadow: 0 0 15px var(--green); margin-bottom: 5px; }
+        
+        /* Birthday Wish & Blink animation */
         .birthday-wish { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; color: #fff; text-shadow: 0 0 10px var(--green); animation: blink 2s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
         .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .stat-card { text-align: center; border: 1px solid var(--green); padding: 10px; }
         .stat-card span { font-size: 1.5rem; display: block; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--green); }
         .progress-container { width: 100%; background: #112211; height: 25px; border: 1px solid var(--green); margin-top: 10px; position: relative; overflow: hidden; }
         #progress-bar { width: 0%; height: 100%; background: var(--green); box-shadow: 0 0 15px var(--green); transition: 1.5s; }
-        .live-feed { height: 300px; overflow-y: hidden; font-size: 0.75rem; line-height: 1.4; }
-        .feed-entry { margin-bottom: 5px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        
+        /* Cải tiến ô BTC Rewards để nổi bật */
+        .btc-reward-box { text-align: center; border: 2px solid #ff9900; padding: 10px; margin-top: 10px; box-shadow: 0 0 20px rgba(255, 153, 0, 0.3); }
+        .btc-reward-box small { font-size: 0.65rem; color: #ff9900; text-transform: uppercase; letter-spacing: 1px; }
+        .btc-val-big { font-size: 2.2rem; font-weight: 900; display: block; color: #fff; text-shadow: 0 0 15px #ff9900; margin-bottom: 10px; }
+        
+        /* Network Feed Style */
+        .live-feed { height: 250px; overflow-y: hidden; font-size: 0.75rem; line-height: 1.4; border-top: 1px solid #113311; padding-top: 10px; }
+        .feed-entry { margin-bottom: 5px; text-shadow: 0 0 5px; }
+        .buy { color: var(--green); }
+        .sell { color: #ff3131; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
         th { text-align: left; color: #888; border-bottom: 1px solid #113311; padding-bottom: 5px; }
         td { padding: 5px 0; border-bottom: 1px solid #0a1a0a; }
+
         .fixed-controls { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.95); border-top: 2px solid var(--green); padding: 15px 0; text-align: center; z-index: 100; }
-        .btn-main { background: transparent; color: var(--green); border: 2px solid var(--green); padding: 10px 30px; font-weight: 900; cursor: pointer; }
+        .btn-main { background: transparent; color: var(--green); border: 2px solid var(--green); padding: 10px 30px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .btn-main.active { background: var(--green); color: #000; box-shadow: 0 0 25px var(--green); }
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
+    
     <div class="main-grid">
         <div class="left-col">
             <div class="social-links">
                 <a href="https://x.com" target="_blank" class="social-btn">X / TWITTER</a>
                 <a href="https://pump.fun" target="_blank" class="social-btn" style="background:#fff;">PUMPFUN TERMINAL</a>
             </div>
+
             <div class="panel big-countdown">
                 <p style="margin:0; font-size: 0.7rem;">[ PROTOCOL ACTIVATION: APRIL 05, 2026 ]</p>
                 <div id="main-timer" class="timer-val">00D:00H:00M:00S</div>
                 <div class="birthday-wish">HAPPY BIRTHDAY SATOSHI</div>
             </div>
+
             <div class="stats-row">
                 <div class="panel stat-card">MARKET CAP (USD)<span id="mc-val">$0.00</span></div>
                 <div class="panel stat-card">TOTAL HOLDERS<span id="holder-count">0</span></div>
             </div>
+
             <div class="panel">
                 <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:5px;">
                     <span>BONDING CURVE PROGRESS</span>
@@ -57,6 +81,7 @@
                     <div style="position:absolute; width:100%; text-align:center; font-size:0.7rem; line-height:25px; color:#fff; font-weight:bold;">MIGRATING TO RAYDIUM AT $69,000 MC</div>
                 </div>
             </div>
+
             <div class="panel">
                 <h3 style="margin:0 0 10px 0; font-size: 0.9rem;">TOP PROTOCOL HOLDERS</h3>
                 <table>
@@ -65,81 +90,107 @@
                 </table>
             </div>
         </div>
+
         <div class="right-col">
             <div class="panel" style="text-align: center;">
-                <p style="font-size: 0.7rem; margin:0;">NEXT BTC REWARD EPOCH</p>
+                <p style="font-size: 0.7rem; margin:0; opacity:0.8;">NEXT BTC REWARD EPOCH</p>
                 <div id="epoch-timer" style="font-size: 2.5rem; font-weight: 900;">04:55</div>
             </div>
+
             <div class="panel">
-                <h3 style="margin:0 0 10px 0; font-size: 0.9rem;">LIVE NETWORK ACTIVITY</h3>
-                <div class="live-feed" id="trade-feed"></div>
+                <h3 style="margin:0; font-size: 0.9rem; color:var(--green);">LIVE NETWORK ACTIVITY</h3>
+                <div class="live-feed" id="trade-feed">
+                    <div style="color: #444;">> Waiting for data feed...</div>
+                </div>
             </div>
-            <div class="panel">
-                <h3 style="margin:0 0 10px 0; font-size: 0.9rem;">⚡ BTC REWARDS</h3>
-                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-                    <div>ACCUMULATED:<br><b style="color:#ff9900;">0.00042 BTC</b></div>
-                    <div>DISTRIBUTED:<br><b style="color:#ff9900;">1.258 BTC</b></div>
+
+            <div class="panel" style="border: 2px solid #ff9900;">
+                <h3 style="margin:0 0 10px 0; font-size: 0.9rem; color:#ff9900; text-align:center;">⚡ SATOSHI REWARDS (BTC)</h3>
+                <div class="btc-reward-box">
+                    <small>ACCUMULATED</small>
+                    <span id="accumulated-btc" class="btc-val-big">0.00042 BTC</span> </div>
+                <div class="btc-reward-box" style="border: 1px solid rgba(255,153,0,0.5); border-top:none;">
+                    <small>TOTAL DISTRIBUTED</small>
+                    <span id="total-distributed-btc" style="color:#ff9900; font-size:1.1rem; font-weight:bold; display:block;">1.258 BTC</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="fixed-controls"><button class="btn-main" id="audioBtn" onclick="toggleMusic()">ACTIVATE AUDIO SYSTEM</button></div>
+
+    <div class="fixed-controls">
+        <button class="btn-main" id="audioBtn" onclick="toggleMusic()">ACTIVATE AUDIO SYSTEM</button>
+    </div>
     <audio id="bgMusic" loop><source src="bg-music.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // Matrix & Timer
+        // Matrix Background Effect (Giữ nguyên)
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const letters = "01$P2P";
-        const drops = Array(Math.floor(canvas.width/16)).fill(1);
-        function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#39FF14"; ctx.font = "16px monospace";
-            drops.forEach((y, i) => {
-                ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*16, y*16);
-                if(y*16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }
+        const drops = Array(Math.floor(canvas.width / 16)).fill(1);
+        function drawMatrix() { ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = "#39FF14"; ctx.font = "16px monospace"; drops.forEach((y, i) => { ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*16, y*16); if (y*16 > canvas.height && Math.random() > 0.975) drops[i] = 0; drops[i]++; }); }
         setInterval(drawMatrix, 35);
 
-        const target = new Date("April 5, 2026 00:00:00").getTime();
-        setInterval(() => {
-            const now = new Date().getTime();
-            const d = target - now;
-            const days = Math.floor(d / 86400000);
-            const hrs = Math.floor((d % 86400000) / 3600000);
-            const mins = Math.floor((d % 3600000) / 60000);
-            const secs = Math.floor((d % 60000) / 1000);
-            document.getElementById("main-timer").innerText = `${days}D:${hrs}H:${mins}M:${secs}S`;
-        }, 1000);
+        // Hiệu ứng Bitcoin rơi (Airdrop)
+        function createBtcDrop() {
+            const btc = document.createElement('div');
+            btc.classList.add('btc-drop');
+            btc.innerHTML = "₿"; // Đồng xu Bitcoin
+            btc.style.left = Math.random() * 100 + 'vw';
+            btc.style.animationDuration = Math.random() * 3 + 2 + 's'; // Tốc độ rơi ngẫu nhiên
+            document.body.appendChild(btc);
+            setTimeout(() => btc.remove(), 5000); // Xóa sau khi rơi xong
+        }
+        setInterval(createBtcDrop, 300); // Tạo 3 đồng mỗi giây
 
-        async function updateData() {
+        // Countdown Timer (Giữ nguyên)
+        const targetDate = new Date("April 5, 2026 00:00:00").getTime();
+        setInterval(() => { const now = new Date().getTime(); const d = targetDate - now; const days = Math.floor(d / 86400000); const hrs = Math.floor((d % 86400000) / 3600000); const mins = Math.floor((d % 3600000) / 60000); const secs = Math.floor((d % 60000) / 1000); document.getElementById("main-timer").innerText = `${days}D:${hrs}H:${mins}M:${secs}S`; }, 1000);
+
+        // API Bridge - Cập nhật số liệu thực tế
+        async function updateProtocolData() {
             try {
                 const res = await fetch('http://localhost:5000/api/stats');
                 const data = await res.json();
+                
+                // Cập nhật Market Cap và Holders
                 document.getElementById('mc-val').innerText = data.market_cap;
                 document.getElementById('holder-count').innerText = data.holders;
-                
-                const mcNum = parseFloat(data.market_cap.replace(/[^0-9.]/g, ''));
-                let prog = (mcNum / 69000) * 100;
-                document.getElementById('progress-bar').style.width = Math.min(prog, 100) + '%';
-                document.getElementById('progress-percent').innerText = Math.min(prog, 100).toFixed(2) + '%';
 
-                document.getElementById('holder-table').innerHTML = data.top_holders.map((h, i) => 
-                    `<tr><td>0${i+1}</td><td>${h.address.slice(0,6)}...${h.address.slice(-4)}</td><td>${parseFloat(h.amount).toLocaleString()}</td></tr>`
+                // Cập nhật Bonding Curve
+                const mcNumeric = parseFloat(data.market_cap.replace(/[^0-9.]/g, ''));
+                let progress = (mcNumeric / 69000) * 100;
+                document.getElementById('progress-bar').style.width = Math.min(progress, 100) + '%';
+                document.getElementById('progress-percent').innerText = Math.min(progress, 100).toFixed(2) + '%';
+
+                // Cập nhật Số BTC Thưởng từ API (Đã sửa lỗi số tĩnh)
+                if(data.btc_rewards) {
+                    document.getElementById('accumulated-btc').innerText = data.btc_rewards.accumulated + " BTC";
+                    document.getElementById('total-distributed-btc').innerText = data.btc_rewards.distributed + " BTC";
+                }
+
+                // Cập nhật danh sách Holder thật (Đã sửa lỗi số lượng)
+                const hTable = document.getElementById('holder-table');
+                hTable.innerHTML = data.top_holders.slice(0, 5).map((h, i) => 
+                    `<tr><td>0${i+1}</td><td>${h.address.slice(0,6)}...${h.address.slice(-4)}</td><td>${Math.floor(h.amount).toLocaleString()}</td></tr>`
                 ).join('');
 
-                document.getElementById('trade-feed').innerHTML = data.recent_trades.map(t => 
-                    `<div class="feed-entry" style="color:${t.type==='BUY'?'#39FF14':'#ff3131'}">[${t.time}] ${t.type==='BUY'?'▲':'▼'} ${t.type} ${t.sol} SOL - ${t.addr}</div>`
-                ).join('');
-            } catch(e) {}
+                // Cập nhật Live Network Activity thực
+                const feed = document.getElementById('trade-feed');
+                if (data.recent_trades && data.recent_trades.length > 0) {
+                    feed.innerHTML = data.recent_trades.map(t => {
+                        const typeClass = t.type === 'BUY' ? 'buy' : 'sell';
+                        return `<div class="feed-entry">[${t.time}] ▲ ${t.type} ${t.sol} SOL</div>`;
+                    }).join('');
+                }
+            } catch (e) { console.log("Re-syncing Protocol Ledger..."); }
         }
+
         function toggleMusic() { const m = document.getElementById("bgMusic"); m.paused ? m.play() : m.pause(); }
-        setInterval(updateData, 5000);
-        updateData();
+        
+        setInterval(updateProtocolData, 5000); // Tần suất cập nhật 5 giây
+        updateProtocolData();
     </script>
 </body>
 </html>
