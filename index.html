@@ -8,250 +8,138 @@
         :root { --green: #39FF14; --bg: #050505; --panel: rgba(0, 25, 0, 0.85); }
         body, html { margin: 0; padding: 0; background: var(--bg); color: var(--green); font-family: 'Courier New', monospace; overflow-x: hidden; }
         canvas { position: fixed; top: 0; left: 0; z-index: -1; }
-        
         .main-grid { display: grid; grid-template-columns: 1fr 380px; gap: 20px; padding: 20px; max-width: 1400px; margin: auto; padding-bottom: 100px; }
-        .panel { background: var(--panel); border: 2px solid var(--green); padding: 15px; box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); }
-        
+        .panel { background: var(--panel); border: 2px solid var(--green); padding: 15px; box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); margin-bottom: 20px; }
         .social-links { display: flex; gap: 15px; margin-bottom: 20px; justify-content: center; }
-        .social-btn { 
-            text-decoration: none; color: #000; background: var(--green); 
-            padding: 8px 20px; font-weight: 900; font-size: 0.9rem;
-            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
-            transition: 0.3s;
-        }
-        .social-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--green); }
-
-        .big-countdown { text-align: center; margin-bottom: 20px; border: 3px solid var(--green); padding: 20px; }
-        .timer-val { font-size: clamp(1.5rem, 4vw, 3.5rem); font-weight: 900; text-shadow: 0 0 15px var(--green); }
-
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
+        .social-btn { text-decoration: none; color: #000; background: var(--green); padding: 8px 20px; font-weight: 900; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); transition: 0.3s; }
+        .big-countdown { text-align: center; border: 3px solid var(--green); }
+        .timer-val { font-size: clamp(1.5rem, 4vw, 3.5rem); font-weight: 900; text-shadow: 0 0 15px var(--green); margin-bottom: 5px; }
+        .birthday-wish { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; color: #fff; text-shadow: 0 0 10px var(--green); animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .stat-card { text-align: center; border: 1px solid var(--green); padding: 10px; }
         .stat-card span { font-size: 1.5rem; display: block; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--green); }
-
-        /* MỚI: Bonding Curve Style */
-        .bonding-panel { margin-bottom: 20px; }
-        .progress-container { width: 100%; background: #112211; height: 20px; border: 1px solid var(--green); margin-top: 10px; position: relative; }
-        #progress-bar { width: 0%; height: 100%; background: var(--green); box-shadow: 0 0 10px var(--green); transition: width 2s ease-in-out; }
-        #progress-text { position: absolute; width: 100%; text-align: center; top: 0; font-size: 0.8rem; font-weight: bold; color: #fff; line-height: 20px; text-shadow: 1px 1px #000; }
-
-        .live-feed { height: 350px; overflow-y: hidden; font-size: 0.8rem; font-family: monospace; border-top: 1px solid #113311; padding-top: 10px; }
-        .buy { color: #00ff00; } .sell { color: #ff0000; }
-
+        .progress-container { width: 100%; background: #112211; height: 25px; border: 1px solid var(--green); margin-top: 10px; position: relative; overflow: hidden; }
+        #progress-bar { width: 0%; height: 100%; background: var(--green); box-shadow: 0 0 15px var(--green); transition: 1.5s; }
+        .live-feed { height: 300px; overflow-y: hidden; font-size: 0.75rem; line-height: 1.4; }
+        .feed-entry { margin-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { text-align: left; color: #888; border-bottom: 1px solid #113311; padding-bottom: 5px; }
+        td { padding: 5px 0; border-bottom: 1px solid #0a1a0a; }
         .fixed-controls { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.95); border-top: 2px solid var(--green); padding: 15px 0; text-align: center; z-index: 100; }
-        .btn-main { 
-            background: transparent; color: var(--green); border: 2px solid var(--green); 
-            padding: 12px 35px; font-weight: 900; cursor: pointer; 
-            text-transform: uppercase; letter-spacing: 2px;
-        }
-        .btn-main.active { background: var(--green); color: #000; box-shadow: 0 0 25px var(--green); }
-
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th { text-align: left; border-bottom: 1px solid var(--green); padding: 10px 5px; }
-        td { padding: 8px 5px; }
+        .btn-main { background: transparent; color: var(--green); border: 2px solid var(--green); padding: 10px 30px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
-
     <div class="main-grid">
         <div class="left-col">
             <div class="social-links">
-                <a href="https://x.com/i/communities/2038186875488522599" target="_blank" class="social-btn">X / TWITTER</a>
-                <a href="https://pump.fun/coin/48YqgWk6N87G5aCEn3CKyqysvb8dgbfwoc8An1PEpump" target="_blank" class="social-btn" style="background: #fff; color: #000;">PUMPFUN TERMINAL</a>
+                <a href="https://x.com" target="_blank" class="social-btn">X / TWITTER</a>
+                <a href="https://pump.fun" target="_blank" class="social-btn" style="background:#fff;">PUMPFUN TERMINAL</a>
             </div>
-
             <div class="panel big-countdown">
-                <p style="margin:0 0 10px 0; font-weight: bold;">[ PROTOCOL ACTIVATION: APRIL 05, 2026 ]</p>
+                <p style="margin:0; font-size: 0.7rem;">[ PROTOCOL ACTIVATION: APRIL 05, 2026 ]</p>
                 <div id="main-timer" class="timer-val">00D:00H:00M:00S</div>
+                <div class="birthday-wish">HAPPY BIRTHDAY SATOSHI</div>
             </div>
-
             <div class="stats-row">
-                <div class="panel stat-card">
-                    MARKET CAP (USD)
-                    <span id="mc-val">$0.00</span>
-                </div>
-                <div class="panel stat-card">
-                    TOTAL HOLDERS
-                    <span id="holder-count">0</span>
-                </div>
+                <div class="panel stat-card">MARKET CAP (USD)<span id="mc-val">$0.00</span></div>
+                <div class="panel stat-card">TOTAL HOLDERS<span id="holder-count">0</span></div>
             </div>
-
-            <div class="panel bonding-panel">
-                <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+            <div class="panel">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:5px;">
                     <span>BONDING CURVE PROGRESS</span>
-                    <span id="progress-percent">0%</span>
+                    <span id="progress-percent">0.00%</span>
                 </div>
                 <div class="progress-container">
                     <div id="progress-bar"></div>
-                    <div id="progress-text">MIGRATING TO RAYDIUM AT $69,000 MC</div>
+                    <div style="position:absolute; width:100%; text-align:center; font-size:0.7rem; line-height:25px; color:#fff; font-weight:bold;">MIGRATING TO RAYDIUM AT $69,000 MC</div>
                 </div>
             </div>
-
             <div class="panel">
-                <h3 style="margin-top:0;">TOP PROTOCOL HOLDERS</h3>
+                <h3 style="margin:0 0 10px 0; font-size: 0.9rem;">TOP PROTOCOL HOLDERS</h3>
                 <table>
-                    <thead>
-                        <tr><th>RANK</th><th>ADDRESS</th><th>QUANTITY</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>01</td><td>Satosh...48Yq</td><td>15,000,000</td></tr>
-                        <tr><td>02</td><td>PumpFn...En3C</td><td>8,200,000</td></tr>
-                        <tr><td>03</td><td>P2P_Wh...bfwo</td><td>4,500,000</td></tr>
-                    </tbody>
+                    <thead><tr><th>RANK</th><th>ADDRESS</th><th>QUANTITY</th></tr></thead>
+                    <tbody id="holder-table"></tbody>
                 </table>
             </div>
         </div>
-
         <div class="right-col">
-            <div class="panel" style="text-align: center; margin-bottom: 20px;">
-                <p style="font-size: 0.8rem; margin:0;">NEXT REWARD EPOCH</p>
-                <div id="epoch-timer" style="font-size: 2.5rem; font-weight: 900;">05:00</div>
+            <div class="panel" style="text-align: center;">
+                <p style="font-size: 0.7rem; margin:0;">NEXT BTC REWARD EPOCH</p>
+                <div id="epoch-timer" style="font-size: 2.5rem; font-weight: 900;">04:55</div>
             </div>
-
             <div class="panel">
-                <h3 style="margin-top:0; font-size: 1rem;">LIVE NETWORK ACTIVITY</h3>
+                <h3 style="margin:0 0 10px 0; font-size: 0.9rem;">LIVE NETWORK ACTIVITY</h3>
                 <div class="live-feed" id="trade-feed"></div>
+            </div>
+            <div class="panel">
+                <h3 style="margin:0 0 10px 0; font-size: 0.9rem;">⚡ BTC REWARDS</h3>
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                    <div>ACCUMULATED:<br><b style="color:#ff9900;">0.00042 BTC</b></div>
+                    <div>DISTRIBUTED:<br><b style="color:#ff9900;">1.258 BTC</b></div>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="fixed-controls">
-        <button class="btn-main" id="audioBtn" onclick="toggleMusic()">ACTIVATE AUDIO SYSTEM</button>
-    </div>
-
-    <audio id="bgMusic" loop>
-        <source src="bg-music.mp3" type="audio/mpeg">
-    </audio>
+    <div class="fixed-controls"><button class="btn-main" id="audioBtn" onclick="toggleMusic()">ACTIVATE AUDIO SYSTEM</button></div>
+    <audio id="bgMusic" loop><source src="bg-music.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // --- 1. Matrix Effect ---
+        // Matrix & Timer
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const letters = "01$P2P_SATOSHI_";
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
+        const letters = "01$P2P";
+        const drops = Array(Math.floor(canvas.width/16)).fill(1);
         function drawMatrix() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#39FF14";
-            ctx.font = fontSize + "px monospace";
-            for (let i = 0; i < drops.length; i++) {
-                ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*fontSize, drops[i]*fontSize);
-                if (drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            ctx.fillStyle = "#39FF14"; ctx.font = "16px monospace";
+            drops.forEach((y, i) => {
+                ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*16, y*16);
+                if(y*16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
-            }
+            });
         }
         setInterval(drawMatrix, 35);
 
-        // --- 2. Countdown ---
-        const targetDate = new Date("April 5, 2026 00:00:00").getTime();
+        const target = new Date("April 5, 2026 00:00:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
-            const diff = targetDate - now;
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((diff % (1000 * 60)) / 1000);
-            document.getElementById("main-timer").innerText = 
-                `${d}D:${h < 10 ? '0'+h : h}H:${m < 10 ? '0'+m : m}M:${s < 10 ? '0'+s : s}S`;
+            const d = target - now;
+            const days = Math.floor(d / 86400000);
+            const hrs = Math.floor((d % 86400000) / 3600000);
+            const mins = Math.floor((d % 3600000) / 60000);
+            const secs = Math.floor((d % 60000) / 1000);
+            document.getElementById("main-timer").innerText = `${days}D:${hrs}H:${mins}M:${secs}S`;
         }, 1000);
 
-        // --- 3. Music Control ---
-        const audio = document.getElementById("bgMusic");
-        const btn = document.getElementById("audioBtn");
-        function toggleMusic() {
-            if (audio.paused) { 
-                audio.play(); 
-                btn.innerText = "MUTE SYSTEM AUDIO"; 
-                btn.classList.add("active");
-            } else { 
-                audio.pause(); 
-                btn.innerText = "ACTIVATE AUDIO SYSTEM"; 
-                btn.classList.remove("active");
-            }
-        }
-
-        // --- 4. Live Feed ---
-        const feed = document.getElementById("trade-feed");
-        function addTrade() {
-            const isBuy = Math.random() > 0.4;
-            const amount = (Math.random() * 8 + 0.1).toFixed(2);
-            const entry = document.createElement("div");
-            entry.className = isBuy ? "buy" : "sell";
-            entry.innerText = `[${new Date().toLocaleTimeString()}] ${isBuy ? '▲ BUY' : '▼ SELL'} ${amount} SOL - ${Math.random().toString(36).substring(7)}...`;
-            feed.prepend(entry);
-            if(feed.children.length > 18) feed.lastChild.remove();
-        }
-        setInterval(addTrade, 1500);
-
-        // --- 5. API Bridge & Animate ---
-        function animateValue(id, start, end, duration, isCurrency = false) {
-            const obj = document.getElementById(id);
-            if (!obj) return;
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const current = (progress * (end - start) + start);
-                
-                if (isCurrency) {
-                    obj.innerHTML = '$' + current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                } else {
-                    obj.innerHTML = Math.floor(current).toLocaleString();
-                }
-                
-                if (progress < 1) window.requestAnimationFrame(step);
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        let currentHolders = 0;
-        let currentMCap = 0;
-
-        async function updateStatsFromProtocol() {
+        async function updateData() {
             try {
-                const response = await fetch('http://localhost:5000/api/stats');
-                const data = await response.json();
+                const res = await fetch('http://localhost:5000/api/stats');
+                const data = await res.json();
+                document.getElementById('mc-val').innerText = data.market_cap;
+                document.getElementById('holder-count').innerText = data.holders;
                 
-                // 1. Cập nhật Holders
-                const newHolders = data.holders;
-                if (newHolders !== currentHolders) {
-                    animateValue("holder-count", currentHolders, newHolders, 1000);
-                    currentHolders = newHolders;
-                }
+                const mcNum = parseFloat(data.market_cap.replace(/[^0-9.]/g, ''));
+                let prog = (mcNum / 69000) * 100;
+                document.getElementById('progress-bar').style.width = Math.min(prog, 100) + '%';
+                document.getElementById('progress-percent').innerText = Math.min(prog, 100).toFixed(2) + '%';
 
-                // 2. Cập nhật Market Cap (Xử lý chuỗi từ API)
-                const rawMCap = typeof data.market_cap === 'string' ? parseFloat(data.market_cap.replace(/[^0-9.]/g, '')) : data.market_cap;
-                if (rawMCap !== currentMCap) {
-                    animateValue("mc-val", currentMCap, rawMCap, 1500, true);
-                    currentMCap = rawMCap;
-                }
+                document.getElementById('holder-table').innerHTML = data.top_holders.map((h, i) => 
+                    `<tr><td>0${i+1}</td><td>${h.address.slice(0,6)}...${h.address.slice(-4)}</td><td>${parseFloat(h.amount).toLocaleString()}</td></tr>`
+                ).join('');
 
-                // 3. Cập nhật Bonding Curve (Giả sử đích là 69,000 USD trên Pump.fun)
-                const targetMC = 69000;
-                let percent = (rawMCap / targetMC) * 100;
-                if (percent > 100) percent = 100;
-                document.getElementById('progress-bar').style.width = percent + '%';
-                document.getElementById('progress-percent').innerText = percent.toFixed(2) + '%';
-
-            } catch (err) {
-                console.log("Waiting for Protocol Connection...");
-            }
+                document.getElementById('trade-feed').innerHTML = data.recent_trades.map(t => 
+                    `<div class="feed-entry" style="color:${t.type==='BUY'?'#39FF14':'#ff3131'}">[${t.time}] ${t.type==='BUY'?'▲':'▼'} ${t.type} ${t.sol} SOL - ${t.addr}</div>`
+                ).join('');
+            } catch(e) {}
         }
-
-        setInterval(updateStatsFromProtocol, 5000); // 5 giây cập nhật 1 lần
-        updateStatsFromProtocol();
-
-        // Epoch Timer
-        let epochTime = 300;
-        setInterval(() => {
-            let mins = Math.floor(epochTime / 60);
-            let secs = epochTime % 60;
-            document.getElementById("epoch-timer").innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            epochTime = epochTime <= 0 ? 300 : epochTime - 1;
-        }, 1000);
+        function toggleMusic() { const m = document.getElementById("bgMusic"); m.paused ? m.play() : m.pause(); }
+        setInterval(updateData, 5000);
+        updateData();
     </script>
 </body>
 </html>
